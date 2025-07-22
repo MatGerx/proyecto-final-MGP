@@ -3,7 +3,7 @@ import { Container, Form, Button } from 'react-bootstrap';
 
 function Contact() {
   return (
-    <Container>
+    <Container className="pt-5">
       <h2>Contacto</h2>
       <Form>
         <Form.Group className="mb-3">

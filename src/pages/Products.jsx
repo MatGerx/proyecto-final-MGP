@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { useCart } from '../components/CartContect'; // importar contexto
 
 function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [cart, setCart] = useState([]);  // Estado para carrito
+  
+  // Usamos contexto, no estado local
+  const { cart, agregarAlCarrito } = useCart();
 
   useEffect(() => {
     fetch('https://api.escuelajs.co/api/v1/products')
@@ -19,17 +22,16 @@ function Products() {
       });
   }, []);
 
-    // 👇 Función para agregar al carrito
-  const agregarAlCarrito = (producto) => {
-    setCart([...cart, producto]);
-  };
-
-  if (loading) return <p>Cargando productos...</p>;
+ if (loading) return (
+  <Container className="pt-5">
+    <p>Cargando productos...</p>
+  </Container>
+);
 
   return (
     <Container className='mt-4'>
       <h1>Productos</h1>
-      <p>Carrito: {cart.length} productos</p> {/* 🛒 Indicador del carrito */}
+      <p>Carrito: {cart.length} productos</p> {/* muestra cantidad global */}
       <Row>
         {products.map(product => (
           <Col key={product.id} md={4}>
@@ -40,7 +42,6 @@ function Products() {
                 <Card.Text>
                   <strong>Precio: ${product.price}</strong>
                 </Card.Text>
-                {/* Botón para agregar al carrito */}
                 <Button onClick={() => agregarAlCarrito(product)} variant="primary">
                   Agregar al carrito
                 </Button>
@@ -49,9 +50,9 @@ function Products() {
           </Col>
         ))}
       </Row>
-
     </Container>
   );
 }
 
 export default Products;
+
